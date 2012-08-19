@@ -27,7 +27,7 @@
   breaklines=true,               % sets automatic line breaking
   breakatwhitespace=false,       % sets if automatic breaks should only happen
                                  % at whitespace.
-  morekeywords={requires,in,constexpr},
+  morekeywords={requires,in,constexpr,string},
   keywordstyle=\color{blue}\bfseries,
   commentstyle=\color{Gray},
   stringstyle=\color{red},
@@ -67,7 +67,7 @@
 %-------------------------------------------------
 
 \begin{frame}[fragile]{Introduction}
-  \begin{block}{What makes \cpp11 ``feel like a new language'',
+  \begin{block}{What makes \cpp11 "feels like a new language",
       \citeauthor{stroustrup-think} \cite{stroustrup-think} ?}
     \begin{itemize}
     \item auto, lambda, range based for, ...
@@ -237,7 +237,7 @@ template <typename T, EnableIf<is_integral<T>>...> f();
   \begin{block}{Control}
     \begin{itemize}
       \item Cache locality \footnotemark[4] and Memory Alignment ?
-      \item Optimization solely relies on \jit\ compiler \footnotemark[5]
+      \item Optimization completely relies on \jit\ compiler \footnotemark[5]
         \begin{lstlisting}[title={\small
             \texttt{jdk7/mytl/jdk/src/share/classes/sun/tools/javac/Main.java}
             \footnotemark[6]}, basicstyle=\ttfamily\msmall]
@@ -361,7 +361,7 @@ if (argv[i].equals("-O")) {
   New memory model \cite{mem-model} $=$ stronger guarantees $=$ more aggressive optimization
   \begin{lstlisting}[title={Taste of \cpp11 \cite{sutter-modern}}]
   string flip(string s) {
-    reverse(s.begin(), s.end())
+    reverse(s.begin(), s.end());
   }
 
   int main() {
@@ -369,10 +369,9 @@ if (argv[i].equals("-O")) {
     v.push_back(async([] { return flip(   " ,olleH"); }));
     v.push_back(async([] { return flip(" egdelwonK"); }));
     v.push_back(async([] { return flip("\n!rebmahc"); }));
-  }
 
-  for (auto& e : v) {
-    cout << e.get();
+    for (auto& e : v) {
+      cout << e.get();
   }
   \end{lstlisting}
 %%  \begin{quotation}
