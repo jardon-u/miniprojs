@@ -1,0 +1,94 @@
+%%% criteo-theme.sty --- Criteo Beamer Theme
+
+%% Author: ugo.jardonnet@criteo
+
+%% Put this file into your TEXINPUTS and the following into your preamble:
+%%   \usepackage[OPTIONS]{criteo-theme}
+
+\usepackage{xcolor}
+
+\NeedsTeXFormat{LaTeX2e}[1995/12/01]
+\def\@rcs@ $#1Date: #2 #3$$#4Revision: #5$ {
+   \ProvidesPackage{criteo-theme}[#2 v#5Criteo Beamer Theme]}
+\@rcs@ $Date: 2012/06/25 09:08:06 $$Revision: 0.0 $
+
+\DeclareOption{}{%%%
+  }
+
+%%\DeclareOption*{\PassOptionsToPackage{\CurrentOption}{}}
+\ExecuteOptions{}
+\ProcessOptions
+
+
+%%%%##########################################################################
+%%%%  Main code
+%%%%##########################################################################
+
+\mode<presentation>{
+  \usetheme{AnnArbor}
+  \usecolortheme{whale}
+
+  \definecolor{criteoOrange}{RGB}{248,152,29}
+
+  \setbeamercolor*{palette primary}{use=structure,fg=white,bg=gray!50}
+  \setbeamercolor*{palette secondary}{use=structure,fg=white,bg=criteoOrange!60}
+  \setbeamercolor*{palette tertiary}{use=structure,fg=white,bg=criteoOrange}
+
+  \setbeamercolor{alerted text}{fg=red}
+
+  \setbeamercolor{item}{fg=gray}
+
+  \setbeamercovered{transparent}
+  \setbeamercolor{frametitle}{fg=black}
+}
+
+% Remove navigation Symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Bottom left side logo
+\pgfdeclareimage[interpolate=true, height=0.7cm]{logo}{logo}
+
+\logo{\pgfuseimage{logo}}
+
+% Change way titles appear in frame
+\setbeamertemplate{frametitle}{
+  \textbf{\insertframetitle}% \\ \quad \small{\insertframesubtitle}
+ %\par%
+}
+
+% Make table of contents pop up at the beginning of each section
+\AtBeginSection[]{
+  \begin{frame}<beamer>{Outline}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+% Change the default bottom line to include the page number and logo.
+\defbeamertemplate*{footline}{infolines theme without institution}{
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.25\paperwidth,
+        ht=2ex,dp=1.125ex,center]{author in head/foot}%
+      \usebeamerfont{author in head/foot} \insertshortauthor
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.52\paperwidth,
+        ht=2ex,dp=1.125ex,center]{title in head/foot}%
+      \usebeamerfont{title in head/foot}\insertshorttitle
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.15\paperwidth,
+        ht=2ex,dp=1.125ex,right]{date in head/foot}%
+      \usebeamerfont{date in head/foot}%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.08\paperwidth,
+        ht=2ex,dp=1.125ex,right]{date in head/foot}%
+      \insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+
+\institute[CRITEO]{
+  \includegraphics[width=.33\textwidth]{logo}
+}
+
+\endinput

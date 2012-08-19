@@ -1,0 +1,395 @@
+\documentclass[svgnames,smaller]{beamer}
+
+\usepackage{criteo-theme}
+\usepackage{tikz}
+
+\usepackage{biblatex}
+\addbibresource{tutorial.bib}
+
+\usepackage{listings}
+\lstset{                         %
+  language=C++,                  % choose the language of the code
+  basicstyle=\ttfamily\small,     % the size of the fonts that are used for the
+                                 % code
+  numbers=left,                  % where to put the line-numbers
+  numberstyle=\footnotesize,     % the size of the fonts that are used for the
+                                 % line-numbers.
+  stepnumber=1,                  % the step between two line-numbers.
+  numbersep=5pt,                 % how far the line-numbers are from the code
+  backgroundcolor=\color{gray!6}, % choose the background color. You must add
+                                 % \usepackage{color}.
+  showspaces=false,              % show spaces adding particular underscores
+  showstringspaces=false,        % underline spaces within strings
+  showtabs=false,                % show tabs within strings adding particular
+                                 % underscores.
+  frame=single,                  % adds a frame around the code
+  tabsize=2,                     % sets default tabsize to 2 spaces
+  breaklines=true,               % sets automatic line breaking
+  breakatwhitespace=false,       % sets if automatic breaks should only happen
+                                 % at whitespace.
+  morekeywords={requires,in,constexpr},
+  keywordstyle=\color{blue}\bfseries,
+  commentstyle=\color{Gray},
+  stringstyle=\color{red},
+  escapeinside={\%*}{*)},         % if you want to add a comment within your code
+  captionpos=top,
+}
+\renewcommand{\lstlistingname}{Code}
+
+\newcommand*{\cpp}{\texttt{C++}}
+\newcommand*{\csharp}{\texttt{C\#}}
+\newcommand*{\jit}{\texttt{JIT}}
+
+%% SLIDE INFORMATION------------------------------------------------------------
+
+\title{\cpp 11 and Why You Care}
+\author{Ugo Jardonnet}
+\date{\today}
+
+
+%-------------------------------------------------------------------------------
+\begin{document}
+%-------------------------------------------------------------------------------
+
+\begin{frame}
+  \titlepage
+  %New features of \cpp and how they position in front of managed languages,
+  %more precisely \csharp and Java
+\end{frame}
+
+\begin{frame}{Table of Contents}
+  \tableofcontents
+  % You might wish to add the option [pausesections]
+\end{frame}
+
+%-------------------------------------------------
+\section{Introduction}
+%-------------------------------------------------
+
+\begin{frame}[fragile]{Introduction}
+  \begin{block}{What makes \cpp11 ``feel like a new language'',
+      \citeauthor{stroustrup-think} \cite{stroustrup-think} ?}
+    \begin{itemize}
+    \item auto, lambda, range based for, ...
+    \end{itemize}
+  \end{block}
+
+  \begin{alertblock}{Do we still need a language like \cpp ?}
+    \begin{itemize}
+    \item \csharp\  and Java focus on productivity
+    \item \cpp\  is about performance and control
+    \end{itemize}
+  \end{alertblock}
+
+  ... also the world is built on \texttt{C}/\cpp:
+  \begin{itemize}
+  \item \csharp, Java, Javascript, Ruby, Python, ... %FIXME: really Javascript ?
+  \item Windows Core functions \cite{sutter-why}
+  \item Visual Studio %% FIXME: Visual Studio in C# ?
+  \end{itemize}
+
+    % http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-334.pdf
+    % Although C# applications are intended to be economical with regard to
+    % memory and processing power
+    % requirements, the language was not intended to compete directly on
+    % performance and size with C or assembly language.
+\end{frame}
+
+%-------------------------------------------------
+\section{Performance and Control}
+%-------------------------------------------------
+
+%-------------------------------------------------
+\subsection{Lambda: Control Closure Capture}
+
+\begin{frame}[fragile]{\cpp\ Lambda}
+  \begin{block}{Definition}
+    [capture](parameters) \texttt{->} return-type \{body\}
+  \end{block}
+  \begin{block}{Example \footnotemark}
+  \begin{lstlisting}
+  std::sort(begin(v), end(v), [](const T& a, const T& b) {
+      return a.x < b.x;
+  });
+  \end{lstlisting}
+  \end{block}
+  \footnotetext{[](auto e) is not valid in \cpp\ nor any king of variadic
+    lambda}
+  %% FIXME: Why not [](auto e) why does it works in \csharp ? Java ? Scala ?
+\end{frame}
+
+\newcommand{\msmall}{\fontsize{8}{10}\selectfont}
+\begin{frame}[fragile]{\cpp\ Lambda : Control Closure Capture}
+  A closure is a function capturing free variables in the lexical environment
+  \begin{lstlisting}[title={Lambda Closure}, basicstyle=\ttfamily\msmall]
+ []      // The use any external variables is an error.
+ [x, &y] // x is captured by value, y is captured by reference
+ [&]     // Implicitly capture by reference
+ [=]     // Implicitly capture by value
+ [&, x]  // x is explicitly captured by value. Other variables will be captured by reference
+ [=, &z] // z is explicitly captured by reference. Other variables will be captured by value
+  \end{lstlisting}
+  \begin{alertblock}{Question:}
+    In \csharp, how do lambdas capture variables of their closure ? Python ? Java ?
+  \end{alertblock}
+  %% C# by reference, Java local and anonymous classes by value (must be final)
+  %% Caml by value, python by reference, php you can choose...
+\end{frame}
+
+%-------------------------------------------------
+\subsection{Control Compile-Time vs Run-Time execution}
+
+\begin{frame}[fragile]{Control Compile-Time vs Run-Time execution}
+  \begin{block}{\textbf{Compile-Time Execution}}
+    \begin{lstlisting}[title={constexpr \footnotemark}]
+  constexpr factorial(int n) {
+    return n > 0 ? n * factorial( n - 1 ) : 1;
+  }
+    \end{lstlisting}
+    \begin{lstlisting}[title={static\_assert}]
+  template <typename T>
+  struct Check {
+    static_assert(sizeof(int) <= sizeof(T),
+                  "T is not big enough!");
+  };
+    \end{lstlisting}
+  \end{block}
+
+  \footnotetext{\texttt{factorial} may also be executed at run-time depending on \texttt{n}}
+\end{frame}
+
+\begin{frame}[fragile]{Control Compile-Time vs Run-Time execution}
+  \begin{block}{\textbf{Compile-Time Metaprogramming \footnotemark}}
+  \begin{lstlisting}[title={decltype}]
+  auto mult(T1 a, T2 b) -> decltype(a * b) {/*...*/};
+  \end{lstlisting}
+  \begin{lstlisting}[title={\texttt{<type-trait>}}]
+  template <typename T>
+  typename enable_if<is_integral<T>::value, void>::type
+  f(T) { cout << "integral" << endl; }
+
+  template <typename T>
+  typename enable_if<!is_integral<T>::value, void>::type
+  f(T) { cout << "not integral" << endl; }
+  \end{lstlisting}
+  \end{block}
+  \footnotetext{No run-time metaprogramming in \cpp\ }
+\end{frame}
+
+
+\begin{frame}[fragile]{Concepts}
+  \begin{alertblock}{Should have been like this}
+  \begin{lstlisting}
+template <Integral T> f(T) { /*...*/ }
+  \end{lstlisting}
+  or this
+  \begin{lstlisting}
+template <typename T> requires Integral<T> f(T) { /*...*/ }
+  \end{lstlisting}
+  \end{alertblock}
+
+  but are more like this
+  \begin{lstlisting}
+template <typename T>
+typename enable_if<is_integral<T>::value, void>::type
+f(T) { /* ... */ }
+  \end{lstlisting}
+though can be more something like this {\cite{martniho-enable}}
+  \begin{lstlisting}
+template <typename T, EnableIf<is_integral<T>>...> f();
+  \end{lstlisting}
+\end{frame}
+
+\subsection{Control Memory Management}
+
+\begin{frame}[fragile]{Control Memory Management}
+  \begin{block}{Fine grain memory management through Smart Pointers \footnotemark}
+  \begin{lstlisting}[title={\texttt{unique\_ptr}}]
+  \end{lstlisting}
+
+  \begin{lstlisting}[title={\texttt{shared\_ptr}}]
+  \end{lstlisting}
+
+  \begin{lstlisting}[title={\texttt{weak\_ptr}}]
+  \end{lstlisting}
+  \end{block}
+
+  \footnotetext{Java Dispose, \csharp\ using, D scope, ...}
+  % interestingly D supports both Garbage collection and RAII
+\end{frame}
+
+%-------------------------------------------------
+\section{Productivity Oriented Languages}
+
+\begin{frame}[fragile]{Productivity Oriented Languages}
+  %%When it comes to performance optimization, C++ always chooses “prevention,”
+  %%and managed languages choose “cure”, Sutter
+  \begin{block}{Productivity} \msmall
+    \begin{itemize}
+      \item Virtual Machine
+      \item Garbage Collection
+        %% Some algorithms that are faster with GC
+        %% ABA problems for high-performance lock-free coding
+      \item MetaData
+      \item linq
+    \end{itemize}
+  \end{block}
+  \begin{block}{Control}
+    \begin{itemize}
+      \item Cache locality \footnotemark[4] and Memory Alignment ?
+      \item Optimization solely relies on \jit\ compiler \footnotemark[5]
+        \begin{lstlisting}[title={\small
+            \texttt{jdk7/mytl/jdk/src/share/classes/sun/tools/javac/Main.java}
+            \footnotemark[6]}, basicstyle=\ttfamily\msmall]
+if (argv[i].equals("-O")) {
+  // -O is accepted for backward compatibility, but
+  // is no longer effective. [...]
+}
+        \end{lstlisting}
+    \end{itemize}
+  \end{block}
+\footnotetext[4]{L1 Cache ref is 0.5ns, Main Memory ref 100ns, disk seek 10,000,000ns
+\cite{slatkin-numbers}}
+\footnotetext[5]{\jit\ ``which is in the business of being fast''
+  \cite{sutter-jit}.}
+\footnotetext[6]{See also {\footnotesize \citetitle{tsunasblog-dev}
+    \cite{tsunasblog-dev}}}
+\end{frame}
+
+\begin{frame}[fragile]{Productivity Oriented Languages}
+  \begin{block}{Performance}
+    \begin{itemize}
+    \item \jit\ compilers are getting better.
+    \item \cpp\ compilers are getting better.
+    \item NextGen/AOT compilers are coming.
+    \item ... in fact the trend is \textit{Going Native} \cite{Ms-going-native}.
+    \end{itemize}
+  \end{block}
+
+  \begin{alertblock}{By the way ...}
+    \begin{itemize}
+    \item Linq is a nice tool but also a performance killer \footnotemark .
+    \item Access to MetaData is even slower than people say (\texttt{Enum.ToString?}).
+    \end{itemize}
+  \end{alertblock}
+  \footnotetext{Enumerable.Cast: Top 5 most consuming function of Web.Widget}
+\end{frame}
+
+%-------------------------------------------------
+\section{New  language features and librabries}
+%-------------------------------------------------
+
+%-------------------------------------------------
+\subsection{\cpp11 feels like ...}
+
+\begin{frame}[fragile]{... in fact \textbf{\texttt{C++11}} feels like Python}
+  %% DIXME: What does cross do ?
+  \begin{lstlisting}[title={python3}]
+  v = [1,2,3,4,5]
+  for e in v: print("- ", e)
+
+  unitlist = [cross(rs, cs) for rs in ['ABC','DEF','GHI'] \ 
+                            for cs in ['123','456']]
+
+  \end{lstlisting}
+  \begin{lstlisting}[title={\cpp11}]
+  auto v = {1,2,3,4,5};                 // initializer list
+  for (auto e: v) println("- ", e);
+
+  vector<vector<string>> unitlist;
+  for (auto rs: {"ABC"_vec,"DEF"_vec,"GHI"_vec}) {
+    for (auto cs: {"123"_vec, "456"_vec}) {
+      unitlist.push_back(cross(rs, cs));
+    }
+  }
+  \end{lstlisting}
+\end{frame}
+
+\subsection{User-defined Literal}
+
+\begin{frame}[fragile]{User-defined Literal}
+  \begin{lstlisting}[title={\texttt{""\_vec}}]
+  constexpr vector<string>
+  operator"" _vec(char const* str, size_t N)
+  {
+    vector<string> output;
+    for_each(str, str+N, [=, &output] (char c) {
+      output.push_back(string(1, c));
+    });
+    return output;
+  }
+  \end{lstlisting}
+
+  \begin{block}{Good or Bad (?), finally we've got \texttt{std::string} literal !!}
+    \begin{lstlisting}
+  std::string operator"" _s(const char * str, size_t len)	{
+	    return std::string{str, len};
+  }
+    \end{lstlisting}
+  \end{block}
+\end{frame}
+
+
+%-------------------------------------------------
+\subsection{Variadic templates}
+
+\begin{frame}[fragile]{Variadic templates}
+  Variadic templates are a type-safe\footnotemark[1] alternative to vargars and
+  much more. %FIXME: bof
+
+  \begin{lstlisting}[title={println}]
+  void println() {
+    std::cout << std::endl;
+  }
+  template <typename T, typename ...Args>
+  void println(const T& value, const Args&... args) {
+    std::cout << value << " ";
+    println(args...);
+  }
+  \end{lstlisting}
+
+  A variadic template is a type queue.
+  Remember \cpp\ metaprogramming is functional style \footnotemark[2].
+  \footnotetext[1]{This mean I can write a specialized version for a given type T}
+  \footnotetext[2]{D metaprogramming is imperative style}
+\end{frame}
+
+%-------------------------------------------------
+\subsection{Threading}
+
+\begin{frame}[fragile]{Threading: Future-Based Model}
+  New memory model \cite{mem-model} $=$ stronger guarantees $=$ more aggressive optimization
+  \begin{lstlisting}[title={Taste of \cpp11 \cite{sutter-modern}}]
+  string flip(string s) {
+    reverse(s.begin(), s.end())
+  }
+
+  int main() {
+    vector<future<string>> v;
+    v.push_back(async([] { return flip(   " ,olleH"); }));
+    v.push_back(async([] { return flip(" egdelwonK"); }));
+    v.push_back(async([] { return flip("\n!rebmahc"); }));
+  }
+
+  for (auto& e : v) {
+    cout << e.get();
+  }
+  \end{lstlisting}
+%%  \begin{quotation}
+%%    Asynchronous programming is what the doctor usually orders for unresponsive
+%%    client apps and for services with thread-scaling issues. \  This usually means a
+%%    bleak departure from the imperative programming constructs we know and love
+%%    into a spaghetti hell of callbacks and signups. \csharp\ and VB????? are putting
+%%    an end to that, reinstating all your tried-and-true control structures on top
+%%    of a future-based model of asynchrony.
+%% 
+%%    Mads Torgersen, Language PM for \csharp\ at Microsoft
+%%  \end{quotation}
+\end{frame}
+
+\section*{Bibliography}
+\begin{frame}[allowframebreaks]{Bibliography}
+\printbibliography
+\end{frame}
+
+\end{document}
