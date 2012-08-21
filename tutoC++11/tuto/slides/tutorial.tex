@@ -114,9 +114,9 @@
 
   ... also the world is built on \texttt{C}/\cpp:
   \begin{itemize}
-  \item \csharp, Java, Javascript, Ruby, Python, ... %FIXME: really Javascript ?
+  \item \csharp, Java, Javascript, Ruby, Python, ...
   \item Windows \sout{Core functions} \cite{sutter-why}
-  \item Visual Studio %% FIXME: Visual Studio in C# ?
+  \item Visual Studio \cite{soft-impl}
   \end{itemize}
 
     % http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-334.pdf
@@ -234,14 +234,21 @@ template <typename T, EnableIf<is_integral<T>>...> f();
 
 \begin{frame}[fragile]{Control Memory Management}
   \begin{block}{Fine grain memory management through Smart Pointers \footnotemark}
-  \begin{lstlisting}[title={\texttt{unique\_ptr}}]
+  \begin{lstlisting}[title={\texttt{unique\_ptr}}, basicstyle=\ttfamily\msmall]
+std::unique_ptr<int> p1(new int(5));
+std::unique_ptr<int> p2 = p1; //Compile error.
+std::unique_ptr<int> p3 = std::move(p1); //Transfers ownership. p3 now owns the memory and p1 is rendered invalid.
   \end{lstlisting}
 
-  \begin{lstlisting}[title={\texttt{shared\_ptr}}]
+  \begin{lstlisting}[title={\texttt{shared\_ptr}}, basicstyle=\ttfamily\msmall]
+std::shared_ptr<int> p1(new int(5));
+std::shared_ptr<int> p2 = p1; //Both now own the memory.
   \end{lstlisting}
 
   \begin{lstlisting}[title={\texttt{weak\_ptr}}]
+// care if you have cyclic references ...
   \end{lstlisting}
+
   \end{block}
 
   \footnotetext{Java Dispose, \csharp\ using, D scope, ...}
