@@ -3,6 +3,10 @@
 \usepackage{criteo-theme}
 \usepackage{tikz}
 
+\usepackage[normalem]{ulem}
+\usepackage{chronology}
+\usepackage{fancybox}
+
 \usepackage{biblatex}
 \addbibresource{tutorial.bib}
 
@@ -40,6 +44,8 @@
 \newcommand*{\csharp}{\texttt{C\#}}
 \newcommand*{\jit}{\texttt{JIT}}
 
+\newcommand{\msmall}{\fontsize{8}{10}\selectfont}
+
 %% SLIDE INFORMATION------------------------------------------------------------
 
 \title{\cpp 11 and Why You Care}
@@ -63,6 +69,30 @@
 \end{frame}
 
 %-------------------------------------------------
+\section*{Bootstrap}
+%-------------------------------------------------
+
+\begin{frame}[fragile]{Bootstrap}
+  \begin{block}{The \cpp\ programming language:}
+    \begin{center}
+    "is a super-set of C with stronger abstraction" \cite{sutter-why}
+    \end{center}
+    \begin{chronology}[5]{1975}{2012}{3ex}{\textwidth}
+      \event[1979]{\decimaldate{1}{10}{1982}}{1979: \texttt{C} with classes}
+      \event{1983}{1983: The \cpp\ language}
+      \event{1998}{1998: Standardization}
+      \event{2003}{2003: International Standard}
+      \event{2011}{2011: The new \cpp}
+    \end{chronology}
+  \end{block}
+  % \csharp 2001, % Java 1995
+  \begin{center}
+    \shadowbox{The \cpp\ programming language follows the \textbf{zero-overhead principle} \cite{Stroustrup:1995:DEC:193198}}
+  \end{center}
+\end{frame}
+
+
+%-------------------------------------------------
 \section{Introduction}
 %-------------------------------------------------
 
@@ -84,7 +114,7 @@
   ... also the world is built on \texttt{C}/\cpp:
   \begin{itemize}
   \item \csharp, Java, Javascript, Ruby, Python, ... %FIXME: really Javascript ?
-  \item Windows Core functions \cite{sutter-why}
+  \item Windows \sout{Core functions} \cite{sutter-why}
   \item Visual Studio %% FIXME: Visual Studio in C# ?
   \end{itemize}
 
@@ -118,7 +148,6 @@
   %% FIXME: Why not [](auto e) why does it works in \csharp ? Java ? Scala ?
 \end{frame}
 
-\newcommand{\msmall}{\fontsize{8}{10}\selectfont}
 \begin{frame}[fragile]{\cpp\ Lambda : Control Closure Capture}
   A closure is a function capturing free variables in the lexical environment
   \begin{lstlisting}[title={Lambda Closure}, basicstyle=\ttfamily\msmall]
