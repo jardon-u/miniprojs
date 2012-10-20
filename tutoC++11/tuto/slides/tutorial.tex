@@ -32,7 +32,7 @@
   breaklines=true,               % sets automatic line breaking
   breakatwhitespace=false,       % sets if automatic breaks should only happen
                                  % at whitespace.
-  morekeywords={requires,in,constexpr,string},
+  morekeywords={requires,in,constexpr,string, static_assert},
   keywordstyle=\color{blue}\bfseries,
   commentstyle=\color{Gray},
   stringstyle=\color{red},
@@ -144,7 +144,7 @@
   });
   \end{lstlisting}
   \end{block}
-  \footnotetext{[](auto e) is not valid in \cpp\ nor any king of variadic
+  \footnotetext{[](auto e) is not valid in \cpp\ nor any kind of variadic
     lambda}
   %% FIXME: Why not [](auto e) why does it works in \csharp ? Java ? Scala ?
 \end{frame}
@@ -163,7 +163,7 @@
     In \csharp, how do lambdas capture variables of their closure ? Python ? Java ?
   \end{alertblock}
   %% C# by reference, Java local and anonymous classes by value (must be final)
-  %% Caml by value, python by reference, php you can choose...
+  %% Caml by value, python by reference mutable/immutable, php you can choose...
 \end{frame}
 
 %-------------------------------------------------
@@ -226,7 +226,8 @@ f(T) { /* ... */ }
   \end{lstlisting}
 though can be more something like this {\cite{martniho-enable}}
   \begin{lstlisting}
-template <typename T, EnableIf<is_integral<T>>...> f();
+template <typename T, EnableIf<is_integral<T>>...>
+f()  { /* ... */ }
   \end{lstlisting}
 \end{frame}
 
@@ -320,7 +321,6 @@ if (argv[i].equals("-O")) {
 \subsection{\cpp11 feels like ...}
 
 \begin{frame}[fragile]{... in fact \textbf{\texttt{C++11}} feels like Python}
-  %% DIXME: What does cross do ?
   \begin{lstlisting}[title={python3}]
   v = [1,2,3,4,5]
   for e in v: print("- ", e)
@@ -372,7 +372,7 @@ if (argv[i].equals("-O")) {
 
 \begin{frame}[fragile]{Variadic templates}
   Variadic templates are a type-safe\footnotemark[1] alternative to vargars and
-  much more. %FIXME: bof
+  much more.
 
   \begin{lstlisting}[title={println}]
   void println() {
@@ -398,7 +398,7 @@ if (argv[i].equals("-O")) {
   New memory model \cite{mem-model} $=$ stronger guarantees $=$ more aggressive optimization
   \begin{lstlisting}[title={Taste of \cpp11 \cite{sutter-modern}}]
   string flip(string s) {
-    reverse(s.begin(), s.end());
+    return reverse(s.begin(), s.end());
   }
 
   int main() {
