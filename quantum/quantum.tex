@@ -129,7 +129,7 @@
 
 \begin{frame}[fragile]{A Simple Experiment \cite{interfer}}
   \begin{itemize}
-  \item FIXME Photons are modeled as taking a superposition of both paths and physical "gates"  as operators modifying the
+  \item Photons are modeled as taking a superposition of both paths and physical "gates"  as operators modifying the
     probabilities of measuring photons in each of their possible states.
   \end{itemize}
     \begin{itemize}
@@ -190,8 +190,10 @@
 
 \begin{frame}[fragile]{Dirac Notation}
   The following Dirac notation and column vector are equivalent:
-  $$\sqrt\frac{2}{3}|001\rangle + \frac{i}{\sqrt(3)}|111\rangle \Longleftrightarrow \begin{pmatrix}0 \\ \sqrt\frac{2}{3}
-    \\ 0 \\ \vdots \\ 0 \\ \frac{i}{\sqrt(3)} \end{pmatrix}$$
+  \begin{equation}
+    \sqrt\frac{2}{3}|001\rangle + \frac{i}{\sqrt(3)}|111\rangle \Longleftrightarrow \begin{pmatrix}0 \\ \sqrt\frac{2}{3}
+      \\ 0 \\ \vdots \\ 0 \\ \frac{i}{\sqrt(3)} \end{pmatrix}
+  \end{equation}
   As you can see, this notation saves space when the dimension is high and the vectors are sparse.
 \end{frame}
 
@@ -224,12 +226,26 @@
 $$|xy\rangle = |x\rangle\otimes|y\rangle = \begin{pmatrix} x_0 \\ x_1 \end{pmatrix} \otimes \begin{pmatrix} y_0 \\ y_1 \end{pmatrix}
   = \begin{pmatrix} x_0 y_0 \\ x_0 y_1 \\ x_1 y_0 \\ x_1 y_1 \end{pmatrix}$$
   
-Example: $$\sqrt\frac{2}{3}|01\rangle + \frac{i}{\sqrt(3)}|11\rangle \Longleftrightarrow \sqrt\frac{2}{3}|0\rangle\otimes|1\rangle + \frac{i}{\sqrt(3)}|1\rangle\otimes|1\rangle$$
+Example: $$\sqrt\frac{2}{3}|01\rangle + \frac{i}{\sqrt(3)}|11\rangle \Longleftrightarrow
+\sqrt\frac{2}{3}|0\rangle\otimes|1\rangle + \frac{i}{\sqrt(3)}|1\rangle\otimes|1\rangle$$ \\~\
+
+\textbf{A key point of quantum computing is that n-qbits systems can be described by the tensor product of $n$ vector
+  spaces $\mathcal{V}$ ($\mathcal{H}$ of dimension 1) i.e. $\mathcal{H}^n = \{ v_1 \otimes \ldots \otimes v_n, \forall v_i \in \mathcal{V}, \forall i \in n \}$}
 \end{frame}
 
 \begin{frame}[fragile]{Outer product}
   dsfs
 \end{frame}
+
+\begin{frame}[fragile]{Measurement}
+  \begin{block}{Measurement Principle}
+    
+  \end{block}
+  The measurement principle is an axiom of quantum physics, you cannot prove it is true. It just seems to match what is
+  happening.  $\ket{\psi}= \alpha\ket{0} + \beta\ket{1}$. Measurement process alters the state of the qubit: the effect
+  of the measurement is that the new state is exactly the outcome of the measurement.
+\end{frame}
+
 
 
 %-------------------------------------------------
