@@ -49,13 +49,12 @@
 
 \newcommand{\msmall}{\fontsize{8}{10}\selectfont}
 
-\newcommand*{\ket}{\texttt{C++}}
 
 %% SLIDE INFORMATION------------------------------------------------------------
 
 \title{Introduction to Quantum Computing}
 \author{Ugo Jardonnet}
-\date{\today}
+\date{December 2017}
 
 
 %-------------------------------------------------------------------------------
@@ -73,14 +72,14 @@
   % You might wish to add the option [pausesections]
 \end{frame}
 
+
 %-------------------------------------------------
 \section{A Simple Experiment}
 %-------------------------------------------------
 
-
 \newcommand{\iu}{\mathrm{i}\mkern1mu}
 
-\begin{frame}[fragile]{A Simple Experiment \cite{interfer}}
+\begin{frame}[fragile]{A Simple Experiment}
    \begin{center}
       \includegraphics[height=.4\textheight]{exp1}
   \end{center}
@@ -91,7 +90,7 @@
   \textbf{The simplest explanation here is that the beam splitter has a 50\% chance to transmit or reflect each photon.}
 \end{frame}
 
-\begin{frame}[fragile]{A Simple Experiment \cite{interfer}}
+\begin{frame}[fragile]{A Simple Experiment}
   \begin{center}
       \includegraphics[height=.4\textheight]{exp2}
   \end{center}
@@ -102,7 +101,7 @@
 
 \end{frame}
 
-\begin{frame}[fragile]{A Simple Experiment \cite{interfer}}
+\begin{frame}[fragile]{A Simple Experiment}
   \textbf{The mathematical framework of quantum physics models the experiment in a way that correctly predicts the
     observed outcomes.}
 
@@ -129,10 +128,10 @@
 
 \begin{frame}[fragile]{A Simple Experiment \cite{interfer}}
   \begin{itemize}
-  \item Photons are modeled as taking a superposition of both paths and physical "gates"  as operators modifying the
+  \item Photons are modeled as taking a superposition of both paths and physical "gates" as operators modifying the
     probabilities of measuring photons in each of their possible states.
   \end{itemize}
-    \begin{itemize}
+  \begin{itemize}
   \item Quantum physics can model experiment that cannot be described by classical physics.
   \item The exponential processing power needed to model some complex quantum system led to the idea of quantum
     computing.
@@ -165,12 +164,16 @@
 \begin{frame}[fragile]{Dirac Notation}
 
   \begin{block}{Single-qbit System Example}
-    Each possible state of a single-qbit system can be written as a vector $\vec{v} = \begin{pmatrix} \alpha_1 \\ \alpha_2 \end{pmatrix}$, with $\alpha_1, \alpha_2$ complex.
+    Each possible state of a single-qbit system can be written as a vector $\vec{\phi} = \begin{pmatrix} \alpha_1 \\ \alpha_2 \end{pmatrix}$, with $\alpha_1, \alpha_2$ complex.
     
-    Following Dirac notation we get: $ |v\rangle = \alpha_1 |0\rangle + \alpha_2 |1\rangle $
+    Following Dirac notation we get: $ |\phi\rangle = \alpha_1 |0\rangle + \alpha_2 |1\rangle $
   \end{block}
-  
-  FIXME boch sphere
+
+  \begin{center}
+    The pure state space of a qubit can be represented by a bloch sphere.
+ 
+    \includegraphics[height=.3\textheight]{bloch}
+  \end{center}
 \end{frame}
 
 \begin{frame}[fragile]{Dirac Notation}
@@ -229,20 +232,30 @@ $$|xy\rangle = |x\rangle\otimes|y\rangle = \begin{pmatrix} x_0 \\ x_1 \end{pmatr
 Example: $$\sqrt\frac{2}{3}|01\rangle + \frac{i}{\sqrt(3)}|11\rangle \Longleftrightarrow
 \sqrt\frac{2}{3}|0\rangle\otimes|1\rangle + \frac{i}{\sqrt(3)}|1\rangle\otimes|1\rangle$$ \\~\
 
-\textbf{A key point of quantum computing is that n-qbits systems can be described by the tensor product of $n$ vector
-  spaces $\mathcal{V}$ ($\mathcal{H}$ of dimension 1) i.e. $\mathcal{H}^n = \{ v_1 \otimes \ldots \otimes v_n, \forall v_i \in \mathcal{V}, \forall i \in n \}$}
+\textbf{}
 \end{frame}
 
-\begin{frame}[fragile]{Outer product}
-  dsfs
+\begin{frame}[fragile]{Outer product and Quantum entanglement}
+  Outer product:$$|x\rangle \langle y |$$.
+  
+  Produces an operator that acts as $$(|x\rangle \langle y|)|z\rangle = |x\rangle(\langle y|z\rangle) = (\langle
+  y|z\rangle)|x\rangle$$
+
+  
+  A key point of quantum computing is that n-qbits systems can be described by the tensor product of $n$ vector
+  spaces $\mathcal{V}$ ($\mathcal{H}$ of dimension 1) i.e. $\mathcal{H}^n = \{ v_1 \otimes \ldots \otimes v_n, \forall v_i \in \mathcal{V}, \forall i \in n \}$
+
+  \begin{block}{quantum Entanglement}
+    The quantum state of each particle cannot be described independently of the others.
+  \end{block}
 \end{frame}
 
 \begin{frame}[fragile]{Measurement}
   \begin{block}{Measurement Principle}
-    
+    A measurement results in the system being in the eigenstate corresponding to the eigenvalue result of the measurement
   \end{block}
   The measurement principle is an axiom of quantum physics, you cannot prove it is true. It just seems to match what is
-  happening.  $\ket{\psi}= \alpha\ket{0} + \beta\ket{1}$. Measurement process alters the state of the qubit: the effect
+  happening.  $|\psi\rangle = \alpha |0\rangle + \beta |1\rangle$. The measurement process alters the state of the qubit: the effect
   of the measurement is that the new state is exactly the outcome of the measurement.
 \end{frame}
 
@@ -255,16 +268,27 @@ Example: $$\sqrt\frac{2}{3}|01\rangle + \frac{i}{\sqrt(3)}|11\rangle \Longleftri
 \subsection{Shor's algorithm}
 
 \begin{frame}[fragile]{Shor's Algorithm}
-  test
+  Quantum algorithm for integer factorization formulated by Peter Shor in 1994.
+
+  \begin{center}
+    \includegraphics[height=.3\textheight]{shor}
+  \end{center}
+  The first part of the algorithm turns the factoring problem into the problem of finding the period of a function, and
+  may be implemented classically. The second part finds the period using the quantum Fourier transform, and is
+  responsible for the quantum speedup.
+
 \end{frame}
 
 
 \subsection{Groover's algorithm}
 \begin{frame}[fragile]{Groover's Algorithm}
-test
+  Search algorithm in sub-linear time.
+  \begin{center}
+    \includegraphics[height=.3\textheight]{grover}
+  \end{center}
 \end{frame}
 
-\section*{Bibliography}
+\section*{Bibliography (FIXME)}
 \begin{frame}[allowframebreaks]{Bibliography}
 \printbibliography
 \end{frame}
